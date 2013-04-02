@@ -2034,7 +2034,10 @@ def parse_args(args):
             options.ignore = DEFAULT_IGNORE.split(',')
 
     if options.exclude:
-        options.exclude = options.exclude.split(',')
+        options.exclude = [
+            exclude if '/' in exclude else '*/' + exclude
+            for exclude in options.exclude.split(',')
+        ]
     else:
         options.exclude = []
 
@@ -2197,7 +2200,7 @@ def find_files(filenames, recursive, exclude):
             for root, directories, children in os.walk(name):
                 filenames += filter(
                     functools.partial(match_file, exclude=exclude),
-                    (os.path.join(root, f) for f in children)
+                    (os.path.normpath(os.path.join(root, f)) for f in children)
                 )
                 directories[:] = filter(lambda d: not d.startswith('.'),
                                         directories)

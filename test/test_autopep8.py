@@ -2640,7 +2640,6 @@ class CommandLineTests(unittest.TestCase):
     def test_exclude(self):
         import tempfile
         temp_directory = tempfile.mkdtemp(dir='.')
-        print temp_directory
         try:
             with open(os.path.join(temp_directory, 'a.py'), 'w') as output:
                 output.write("'abc'  \n")

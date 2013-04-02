@@ -39,6 +39,7 @@ from __future__ import division
 import codecs
 import copy
 import fnmatch
+import functools
 import inspect
 import os
 import re
@@ -2194,11 +2195,12 @@ def find_files(filenames, recursive, exclude):
         name = filenames.pop(0)
         if recursive and os.path.isdir(name):
             for root, directories, children in os.walk(name):
-                filenames += [os.path.join(root, f) for f in children
-                              if match_file(f, exclude)]
-                for d in directories:
-                    if d.startswith('.'):
-                        directories.remove(d)
+                filenames += filter(
+                    functools.partial(match_file, exclude=exclude),
+                    (os.path.join(root, f) for f in children)
+                )
+                directories[:] = filter(lambda d: not d.startswith('.'),
+                                        directories)
         else:
             yield name
 

@@ -2036,7 +2036,7 @@ def parse_args(args):
     if options.exclude:
         options.exclude = [
             exclude if '/' in exclude else '*/' + exclude
-            for exclude in options.exclude.split(',')
+            for exclude in options.exclude.replace('\\', '/').split(',')
         ]
     else:
         options.exclude = []
